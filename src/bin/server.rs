@@ -35,8 +35,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let (bcast_tx, _) = channel(16);
     let clients: HashMap<SocketAddr, Sender<String>> = HashMap::new(); // Removed `mut` from here
 
-    let listener = TcpListener::bind("127.0.0.1:2000").await?;
-    println!("Listening on port 2000");
+    let listener = TcpListener::bind("127.0.0.1:8080").await?;
+    println!("Listening on port 8080");
 
     while let Ok((socket, addr)) = listener.accept().await {
         println!("New connection from {}", addr);
