@@ -3,6 +3,7 @@ use futures_util::SinkExt;
 use http::Uri;
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio_websockets::{ClientBuilder, Message};
+use gethostname::gethostname;
 
 #[tokio::main]
 async fn main() -> Result<(), tokio_websockets::Error> {
@@ -10,8 +11,11 @@ async fn main() -> Result<(), tokio_websockets::Error> {
         .connect()
         .await?;
 
+    println!("From Server: Welcome to chat! Type a message");
+
     let stdin = tokio::io::stdin();
     let mut stdin = BufReader::new(stdin).lines();
+    let host = gethostname().into_string().unwrap_or_else(|_| "unknown".to_string());
 
     loop {
         tokio::select! {
@@ -19,7 +23,7 @@ async fn main() -> Result<(), tokio_websockets::Error> {
                 match incoming {
                     Some(Ok(msg)) => {
                         if let Some(text) = msg.as_text() {
-                            println!("From server: {}", text);
+                            println!("{}'s Computer - From server: {}",host, text);
                         }
                     },
                     Some(Err(err)) => {
